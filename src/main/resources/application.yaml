@@ -55,16 +55,3 @@ management:
   endpoint:
     health:
       show-details: always  # Показывать все детали здоровья приложения (в продакшне лучше ограничить)
-
-# Настройки безопасности
-spring:
-  security:
-    user:
-      name: admin  # Убедитесь, что добавили базового пользователя для администрирования в случае необходимости
-    oauth2:
-      client:
-        registration:
-          github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
-            scope: user,repo
