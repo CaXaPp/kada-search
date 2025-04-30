@@ -1,19 +1,20 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/kada
+    # Использование переменной окружения Heroku для строки подключения к базе данных
+    url: ${JDBC_DATABASE_URL}  # Heroku автоматически задает эту переменную окружения
     driverClassName: org.postgresql.Driver
-    username: postgres
-    password: postgres
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
       idle-timeout: 30000
       pool-name: CargoHikariCP
+    username: ${JDBC_DATABASE_USERNAME:postgres}  # Убедитесь, что переменная окружения для имени пользователя задана в Heroku
+    password: ${JDBC_DATABASE_PASSWORD:postgres}  # Убедитесь, что переменная окружения для пароля задана в Heroku
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # Для разработки можно использовать 'update'. Для продакшн-среды лучше 'validate' или 'none'
     properties:
       hibernate:
         format_sql: true
@@ -22,7 +23,7 @@ spring:
         envers:
           default_schema: aud
           store_data_at_delete: true
-    open-in-view: false
+    open-in-view: false  # Это отключает lazy loading в шаблонах (улучшает производительность)
 
   logging:
     level:
@@ -30,21 +31,40 @@ spring:
       org.hibernate.type.descriptor.sql: TRACE
 
   freemarker:
-    template-loader-path: classpath:/templates/
-    suffix: .ftl
+    template-loader-path: classpath:/templates/  # Путь к вашим шаблонам
+    suffix: .ftl  # Расширение для шаблонов
     charset: UTF-8
     check-template-location: true
     settings:
-      number_format: computer
+      number_format: computer  # Формат чисел в шаблонах
 
   mvc:
-    throw-exception-if-no-handler-found: true
+    throw-exception-if-no-handler-found: true  # Включить исключение при отсутствии обработчика
 
   web:
     resources:
-      add-mappings: false
+      add-mappings: false  # Отключить автоматическое добавление маппингов для ресурсов
 
 server:
   error:
     whitelabel:
-      enabled: false
+      enabled: false  # Отключить стандартную ошибку страницы
+
+# Секреты и настройки
+management:
+  endpoint:
+    health:
+      show-details: always  # Показывать все детали здоровья приложения (в продакшне лучше ограничить)
+
+# Настройки безопасности
+spring:
+  security:
+    user:
+      name: admin  # Убедитесь, что добавили базового пользователя для администрирования в случае необходимости
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope: user,repo
