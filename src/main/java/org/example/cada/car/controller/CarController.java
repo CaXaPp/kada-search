@@ -43,9 +43,10 @@ public class CarController {
 
     @GetMapping("/search")
     public String searchCar(@RequestParam("vin") String vin, Model model) {
+        vin = vin.replaceAll("\\s+", "");
+
         try {
             Car car = carService.getCarByVin(vin);
-
             List<CarPhoto> photos = carPhotoService.getPhotosByCar(car.getId());
 
             model.addAttribute("car", car);
