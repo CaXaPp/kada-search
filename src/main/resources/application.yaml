@@ -4,21 +4,20 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
   datasource:
-    # Использование переменной окружения Heroku для строки подключения к базе данных
-    url: ${JDBC_DATABASE_URL}  # Heroku автоматически задает эту переменную окружения
+    url: ${JDBC_DATABASE_URL}
     driverClassName: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
       idle-timeout: 30000
       pool-name: CargoHikariCP
-    username: ${JDBC_DATABASE_USERNAME:postgres}  # Убедитесь, что переменная окружения для имени пользователя задана в Heroku
-    password: ${JDBC_DATABASE_PASSWORD:postgres}  # Убедитесь, что переменная окружения для пароля задана в Heroku
+    username: ${JDBC_DATABASE_USERNAME:postgres}
+    password: ${JDBC_DATABASE_PASSWORD:postgres}
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update  # Для разработки можно использовать 'update'. Для продакшн-среды лучше 'validate' или 'none'
+      ddl-auto: update
     properties:
       hibernate:
         ddl-auto: update
@@ -28,7 +27,12 @@ spring:
         envers:
           default_schema: aud
           store_data_at_delete: true
-    open-in-view: false  # Это отключает lazy loading в шаблонах (улучшает производительность)
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
 
   logging:
     level:
@@ -36,27 +40,26 @@ spring:
       org.hibernate.type.descriptor.sql: TRACE
 
   freemarker:
-    template-loader-path: classpath:/templates/  # Путь к вашим шаблонам
-    suffix: .ftl  # Расширение для шаблонов
+    template-loader-path: classpath:/templates/
+    suffix: .ftl
     charset: UTF-8
     check-template-location: true
     settings:
-      number_format: computer  # Формат чисел в шаблонах
+      number_format: computer
 
   mvc:
-    throw-exception-if-no-handler-found: true  # Включить исключение при отсутствии обработчика
+    throw-exception-if-no-handler-found: true
 
   web:
     resources:
-      add-mappings: false  # Отключить автоматическое добавление маппингов для ресурсов
+      add-mappings: false
 
 server:
   error:
     whitelabel:
-      enabled: false  # Отключить стандартную ошибку страницы
+      enabled: false
 
-# Секреты и настройки
 management:
   endpoint:
     health:
-      show-details: always  # Показывать все детали здоровья приложения (в продакшне лучше ограничить)
+      show-details: always
