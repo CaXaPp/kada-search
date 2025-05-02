@@ -29,7 +29,7 @@ public class CarPhotoService {
 
         CarPhoto carPhoto = new CarPhoto();
         carPhoto.setCar(car);
-        carPhoto.setFileName(file.getOriginalFilename());
+//        carPhoto.setFileName(file.getOriginalFilename());
         carPhoto.setPhotoData(file.getBytes());
         carPhoto.setUploadedAt(LocalDateTime.now());
 
