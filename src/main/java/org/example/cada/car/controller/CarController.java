@@ -6,13 +6,12 @@ import org.example.cada.carPhoto.model.CarPhoto;
 import org.example.cada.carPhoto.service.CarPhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -67,21 +66,6 @@ public class CarController {
         model.addAttribute("photo", carPhoto);
         return "photo";
     }
-
-    @GetMapping("/photo/{photoId}")
-    @ResponseBody
-    public ResponseEntity<byte[]> getPhoto(@PathVariable Long photoId) {
-        CarPhoto photo = carPhotoService.getPhotoById(photoId);
-
-        if (photo == null || photo.getPhotoData() == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        return new ResponseEntity<>(photo.getPhotoData(), headers, HttpStatus.OK);
-    }
-
 
     @GetMapping("/car/new")
     public String showCarForm() {

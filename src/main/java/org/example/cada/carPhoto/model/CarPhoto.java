@@ -18,9 +18,8 @@ public class CarPhoto extends BaseEntity {
     @ManyToOne
     private Car car;
 
-    @Lob
-    @Column(name = "photo_data", columnDefinition = "BYTEA")
-    private byte[] photoData;
+    @Column(name = "photo_url")
+    private String photoUrl;
 
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;

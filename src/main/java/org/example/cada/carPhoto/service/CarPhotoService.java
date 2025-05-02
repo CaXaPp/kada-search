@@ -27,15 +27,18 @@ public class CarPhotoService {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found with id: " + carId));
 
+        Path uploadDir = Path.of("uploads", carId.toString());
+        Files.createDirectories(uploadDir);
+        Path filePath = uploadDir.resolve(file.getOriginalFilename());
+        file.transferTo(filePath);
+
         CarPhoto carPhoto = new CarPhoto();
         carPhoto.setCar(car);
-//        carPhoto.setFileName(file.getOriginalFilename());
-        carPhoto.setPhotoData(file.getBytes());
+        carPhoto.setPhotoUrl(filePath.toString());
         carPhoto.setUploadedAt(LocalDateTime.now());
 
         carPhotoRepository.save(carPhoto);
     }
-
 
     public List<CarPhoto> getPhotosByCar(Long carId) {
         return carPhotoRepository.findByCarId(carId);
